@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login/Register - Recipe Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    .active #registerForm {
+      display: block !important;
+    }
+    .active #loginForm {
+      display: none !important;
+    }
+  </style>
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+  <div class="container text-center">
+    <div class="mb-3">
+      <button class="btn btn-outline-primary login-btn">Login</button>
+      <button class="btn btn-outline-secondary register-btn">Register</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm" class="bg-white p-4 rounded shadow mx-auto" style="width: 300px;">
+      <h2 class="mb-3">Login</h2>
+      <input type="text" class="form-control mb-2" placeholder="Username" required>
+      <input type="password" class="form-control mb-3" placeholder="Password" required>
+      <button type="submit" class="btn btn-primary w-100">Sign In</button>
+    </form>
+
+    <!-- Registration Form -->
+    <form id="registerForm" class="bg-white p-4 rounded shadow mx-auto d-none" style="width: 300px;">
+      <h2 class="mb-3">Register</h2>
+      <input type="text" class="form-control mb-2" placeholder="Username" required>
+      <input type="email" class="form-control mb-2" placeholder="Email" required>
+      <input type="password" class="form-control mb-3" placeholder="Password" required>
+      <button type="submit" class="btn btn-success w-100">Sign Up</button>
+    </form>
+  </div>
+
+  <script>
+    const container = document.querySelector('.container');
+    const registerBtn = document.querySelector('.register-btn');
+    const loginBtn = document.querySelector('.login-btn');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+
+    registerBtn.addEventListener('click', () => {
+      container.classList.add('active');
+    });
+
+    loginBtn.addEventListener('click', () => {
+      container.classList.remove('active');
+    });
+
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const username = loginForm.querySelector('input[type="text"]').value.trim();
+      const password = loginForm.querySelector('input[type="password"]').value.trim();
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+
+      if (storedUser && username === storedUser.username && password === storedUser.password) {
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Invalid username or password!");
+      }
+    });
+
+    registerForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const username = registerForm.querySelector('input[type="text"]').value.trim();
+      const email = registerForm.querySelector('input[type="email"]').value.trim();
+      const password = registerForm.querySelector('input[type="password"]').value.trim();
+
+      if (username && email.includes("@") && password.length >= 4) {
+        const user = { username, email, password };
+        localStorage.setItem('user', JSON.stringify(user));
+        alert("Registration successful!");
+        container.classList.remove('active');
+      } else {
+        alert("Please fill all fields correctly.");
+      }
+    });
+  </script>
+
+</body>
+</html>
